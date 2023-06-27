@@ -1,5 +1,10 @@
 import { For, Show, createResource, createSignal, onMount } from "solid-js"
+import { createRouteData, useRouteData } from "solid-start"
 import { DayData } from "~/lib/types"
+
+export const routeData = () => {
+  return createRouteData(fetchApi)
+}
 
 const getBaseURL = () => {
   if (import.meta.env.MODE === "development") {
@@ -27,7 +32,7 @@ const fetchApi = async () => {
 }
 
 export const Home = () => {
-  let [data] = createResource(fetchApi)
+  const data = useRouteData<typeof routeData>()
 
   const classes = [
     "7A",
@@ -50,11 +55,11 @@ export const Home = () => {
     "12",
   ]
 
-  const [selected, setSelected] = createSignal(classes.at(0))
+  const [selected, setSelected] = createSignal("7A")
 
   return (
     <Show
-      when={data.loading}
+      when={data.loading && !data()}
       fallback={
         <Show
           when={data.error}
