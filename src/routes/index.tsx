@@ -42,7 +42,7 @@ export const Home = () => {
 
   return (
     <Show
-      when={!data.loading}
+      when={data.state === "ready"}
       fallback={
         <Show
           when={!data.error}
