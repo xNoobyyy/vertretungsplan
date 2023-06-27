@@ -22,6 +22,7 @@
     "htmlparser2": "^9.0.0",
     "solid-js": "^1.7.6",
     "solid-start": "^0.2.26",
+    "solid-start-vercel": "^0.2.26",
     "undici": "^5.15.1"
   },
   "engines": {
