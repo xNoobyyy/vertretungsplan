@@ -42,10 +42,10 @@ export const Home = () => {
 
   return (
     <Show
-      when={data.state === "ready" && typeof data() !== "undefined"}
+      when={!data.loading}
       fallback={
         <Show
-          when={!data.error || typeof data() === "undefined"}
+          when={!data.error}
           fallback={
             <div class="flex w-screen h-screen justify-center items-center text-3xl font-mono">
               Error fetching data ...
@@ -71,7 +71,9 @@ export const Home = () => {
           <For each={classes}>
             {(item) => (
               <button
-                class={`w-14 h-9 shadow-lg shadow-[#bac5c5] m-1 ${selected() === item ? "bg-[#b2c6ce] shadow-[#516363]" : ""}`}
+                class={`w-14 h-9 shadow-lg shadow-[#bac5c5] m-1 ${
+                  selected() === item ? "bg-[#b2c6ce] shadow-[#516363]" : ""
+                }`}
                 onclick={() => setSelected(item)}
               >
                 {item}
@@ -88,9 +90,7 @@ export const Home = () => {
       <main class="h-full">
         <div class="">
           <Show
-            when={
-              typeof data() === "undefined"
-            }
+            when={typeof data() === "undefined"}
             fallback={
               <div class="text-2xl text-center">
                 Keine Vertretungsplan Einträge!
