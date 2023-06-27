@@ -10,7 +10,7 @@ const getBaseURL = () => {
   if (import.meta.env.MODE === "development") {
     return "http://localhost:3000"
   } else {
-    return "https://vertretungsplan-rose.vercel.app"
+    return "https://vertretungsplan-paulsen.vercel.app"
   }
 }
 
