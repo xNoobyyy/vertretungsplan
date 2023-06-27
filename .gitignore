@@ -16,6 +16,8 @@ netlify
 *.launch
 .settings/
 
+/.git
+
 # Temp
 gitignore
 
