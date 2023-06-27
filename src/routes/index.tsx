@@ -22,11 +22,9 @@ const fetchApi = async () => {
       slider: string
     }
   } catch (err) {
-    console.log("debug", err)
+    console.log("error occured", err)
     return undefined
   }
-
-  console.log("420", response)
 
   return response
 }
