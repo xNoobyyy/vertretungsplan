@@ -18,12 +18,12 @@ Some stuff to remove the blue button and div hover/click thingy on phones
 @layer components {
   .marquee {
     animation: marquee 30s linear infinite;
+  }
 
-    &:hover {
-      -moz-animation-play-state: paused;
-      -webkit-animation-play-state: paused;
-      animation-play-state: paused;
-    }
+  .marquee-hovered {
+    -moz-animation-play-state: paused;
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
   }
 }
 

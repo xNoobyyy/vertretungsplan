@@ -1,6 +1,12 @@
-import { For, Show, createResource, createSignal, onMount } from "solid-js"
+import {
+  For,
+  Show,
+  createEffect,
+  createSignal,
+} from "solid-js"
 import { createRouteData, useRouteData } from "solid-start"
 import { DayData } from "~/lib/types"
+import { onMount } from "solid-js"
 
 export const routeData = () => {
   return createRouteData(fetchApi)
@@ -55,6 +61,24 @@ export const Home = () => {
 
   const [selected, setSelected] = createSignal("7A")
 
+  const [sliderHovered, setSliderHovered] = createSignal(false)
+
+  createEffect(() => {
+
+    // for this could just use :hover but I wanna add a delay in the future of ~100ms
+
+    let timeout
+
+    if (sliderHovered()) {
+      timeout = setTimeout(() => {
+        setSliderHovered(true)
+      }, 100)
+    } else {
+      clearTimeout(timeout)
+      setSliderHovered(false)
+    }
+  })
+
   return (
     <Show
       when={data.loading && !data()}
@@ -89,7 +113,11 @@ export const Home = () => {
                   </For>
                 </div>
                 <div class="h-12 flex overflow-hidden select-none text-md">
-                  <div class="flex-shrink-0 flex items-center justify-around min-w-full marquee pl-[100%]">
+                  <div
+                    class={`flex-shrink-0 flex items-center justify-around min-w-full marquee pl-[100%] ${sliderHovered() ? "marquee-hovered" : ""}`}
+                    onMouseEnter={() => setSliderHovered(true)}
+                    onMouseLeave={() => setSliderHovered(false)}
+                  >
                     {data()?.slider}
                   </div>
                 </div>
