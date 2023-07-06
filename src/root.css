@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-Some stuff to remove the blue button and div hover/click thingy on phones
- */
 * {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -15,6 +12,22 @@ Some stuff to remove the blue button and div hover/click thingy on phones
   outline: none;
 }
 
+::-webkit-scrollbar {
+  @apply w-4 bg-transparent;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply border-4 border-solid border-transparent bg-neutral-500 rounded-full bg-clip-padding;
+}
+
+body {
+  overflow-x: hidden;
+}
+
 @layer components {
   .marquee {
     animation: marquee 30s linear infinite;
@@ -23,6 +36,34 @@ Some stuff to remove the blue button and div hover/click thingy on phones
       -moz-animation-play-state: paused;
       -webkit-animation-play-state: paused;
       animation-play-state: paused;
+    }
+  }
+
+  .grid-row {
+    & *:nth-child(1) {
+      @apply dt:w-[10vw] pt:w-[24%];
+    }
+
+    & *:not(:nth-child(1)) {
+      @apply dt:w-[5vw] pt:w-[19%];
+    }
+
+    & * {
+      @apply border-0 border-y-neutral-300 py-3;
+    }
+
+    &:not(:nth-last-child(-n + 1)) {
+      @apply border-b-[0.5px];
+    }
+  }
+
+  .grid-header-row {
+    & *:nth-child(1) {
+      @apply pb-6;
+    }
+
+    & *:not(:nth-child(1)) {
+      @apply pb-6;
     }
   }
 }

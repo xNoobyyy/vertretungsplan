@@ -1,15 +1,24 @@
-import {
-  For,
-  Show,
-  createEffect,
-  createSignal,
-} from "solid-js"
-import { createRouteData, useRouteData } from "solid-start"
+import { For, Show, createSignal, onMount } from "solid-js"
+import { A, createRouteData, useRouteData, useServerContext } from "solid-start"
 import { DayData } from "~/lib/types"
-import { onMount } from "solid-js"
+import {
+  createServerAction$,
+  createServerData$,
+  redirect,
+} from "solid-start/server"
+import { storage } from "~/lib/utils"
+import Header from "~/components/Header"
 
 export const routeData = () => {
-  return createRouteData(fetchApi)
+  const plan = createRouteData(fetchApi)
+  const selected = createServerData$(
+    async (source, event) =>
+      ((await storage.getSession(event.request.headers.get("cookie"))).get(
+        "selected"
+      ) as string) ?? "7A"
+  )
+
+  return { plan, selected }
 }
 
 const getBaseURL = () => {
@@ -22,7 +31,9 @@ const getBaseURL = () => {
 
 const fetchApi = async () => {
   try {
-    var response = (await (await fetch(`${getBaseURL()}/api/data`)).json()) as {
+    var response = (await (
+      await fetch(`${getBaseURL()}/api/data`, { cache: "no-cache" })
+    ).json()) as {
       day1: DayData
       day2: DayData
       slider: string
@@ -32,11 +43,16 @@ const fetchApi = async () => {
     return undefined
   }
 
-  return response
+  return response as {
+    day1: DayData
+    day2: DayData
+    slider: string
+  }
 }
 
 export const Home = () => {
   const data = useRouteData<typeof routeData>()
+  const plan = data.plan
 
   const classes = [
     "7A",
@@ -59,26 +75,34 @@ export const Home = () => {
     "12",
   ]
 
-  const [selected, setSelected] = createSignal("7A")
+  const [selected, setSelected] = createSignal(
+    data.selected.state === "ready" ? data.selected()!! : "7A"
+  )
+
+  const select = (selected: string) => {
+    setSelected(selected)
+    storage
+      .getSession(document.cookie)
+      .then((session) => {
+        session.set("selected", selected)
+        return storage.commitSession(session)
+      })
+      .then((newCookie) => {
+        document.cookie = newCookie
+      })
+  }
 
   return (
     <Show
-      when={data.loading && !data()}
+      when={plan.loading && !plan()}
       fallback={
         <Show
-          when={data.error}
+          when={plan.error}
           fallback={
             <>
-              <header class="text-2xl font-bold m-8 text-[#424242] content-center items-center justify-center flex">
-                <h1>Vertretungsplan</h1>
-                <img
-                  class="object-cover h-16 w-auto ml-6"
-                  src="/paulsen-logo-dark.svg"
-                  alt="Paulsen-Logo"
-                />
-              </header>
+              <Header />
               <nav class="bg-[#eff4f6] shadow-dark">
-                <div class="min-h-max flex flex-wrap justify-center items-center px-10 pt-6 pb-2">
+                <div class="min-h-max flex w-full flex-wrap justify-center items-center px-10 pt-6 pb-2">
                   <For each={classes}>
                     {(item) => (
                       <button
@@ -87,68 +111,124 @@ export const Home = () => {
                             ? "bg-[#b2c6ce] shadow-[#516363]"
                             : ""
                         }`}
-                        onclick={() => setSelected(item)}
+                        onclick={() => select(item)}
                       >
                         {item}
                       </button>
                     )}
                   </For>
                 </div>
-                <div class="h-12 flex overflow-hidden select-none text-md">
+                <div class="h-12 flex select-none text-md overflow-x-hidden">
                   <div
                     class={`flex-shrink-0 flex items-center justify-around min-w-full marquee pl-[100%]`}
                   >
-                    {data()?.slider}
+                    {plan()?.slider}
                   </div>
                 </div>
               </nav>
-              <main class="h-full mt-12">
-                <div class="">
-                  <Show
-                    when={
-                      data()?.day1.data.find(
-                        (value) => value.class === selected()
-                      )?.data
-                    }
-                    fallback={
-                      <div class="text-2xl text-center">
-                        Keine Vertretungsplan Einträge!
-                      </div>
-                    }
-                  >
-                    <table class="">
-                      <thead>
-                        <tr>
-                          <th class={"dt:min-w-[5vw] pt:w-[15%]"}>Info</th>
-                          <th class={"dt:min-w-[5vw] pt:w-[15%]"}>Stunde</th>
-                          <th class={"dt:min-w-[5vw] pt:w-[15%]"}>
-                            Vertretung
-                          </th>
-                          <th class={"dt:min-w-[5vw] pt:w-[15%]"}>Fach</th>
-                          <th class={"dt:min-w-[5vw] pt:w-[15%]"}>Raum</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <For
-                          each={
-                            data()?.day1.data.find(
-                              (value) => value.class === selected()
-                            )?.data
-                          }
-                        >
-                          {(data) => (
-                            <tr>
-                              <td>{data.info}</td>
-                              <td>{data.lesson}</td>
-                              <td>{data.substitute}</td>
-                              <td>{data.subject}</td>
-                              <td>{data.room}</td>
-                            </tr>
-                          )}
-                        </For>
-                      </tbody>
-                    </table>
-                  </Show>
+              <main class="my-12 flex pt:flex-col dt:justify-center dt:gap-[10vw] pt:gap-10">
+                <div class="flex justify-center">
+                  <div class="dt:w-[40vw] pt:w-[95vw] text-[#424242]">
+                    <div class="text-center text-2xl font-mono text-[#424242] mb-10">
+                      {plan()?.day1.date}
+                      <div class="text-xl">{plan()?.day1.state}</div>
+                    </div>
+                    <Show
+                      when={
+                        plan()?.day1.data.find(
+                          (value) => value.class === selected()
+                        )?.data
+                      }
+                      fallback={
+                        <div class="text-2xl text-center font-mono">
+                          Keine Vertretungsplan Einträge!
+                        </div>
+                      }
+                    >
+                      <table class="w-full">
+                        <thead>
+                          <tr class="grid-header-row">
+                            <th>Info</th>
+                            <th>Stunde</th>
+                            <th>Lehrer</th>
+                            <th>Fach</th>
+                            <th>Raum</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <For
+                            each={
+                              plan()?.day1.data.find(
+                                (value) => value.class === selected()
+                              )?.data
+                            }
+                          >
+                            {(data) => (
+                              <tr class="text-center grid-row">
+                                <td class="">{data.info}</td>
+                                <td class="">{data.lesson}</td>
+                                <td class="">{data.substitute}</td>
+                                <td class="">{data.subject}</td>
+                                <td class="">{data.room}</td>
+                              </tr>
+                            )}
+                          </For>
+                        </tbody>
+                      </table>
+                    </Show>
+                  </div>
+                </div>
+                <div class="h-[0.5px] w-screen bg-neutral-200 my-10 dt:hidden" />
+                <div class="flex justify-center">
+                  <div class="dt:w-[40vw] pt:w-[95vw] text-[#424242]">
+                    <div class="text-center text-2xl font-mono text-[#424242] mb-10">
+                      {plan()?.day2.date}
+                      <div class="text-xl">{plan()?.day2.state}</div>
+                    </div>
+                    <Show
+                      when={
+                        plan()?.day2.data.find(
+                          (value) => value.class === selected()
+                        )?.data
+                      }
+                      fallback={
+                        <div class="text-2xl text-center font-mono">
+                          Keine Vertretungsplan Einträge!
+                        </div>
+                      }
+                    >
+                      <table class="w-full">
+                        <thead>
+                          <tr class="grid-header-row">
+                            <th>Info</th>
+                            <th>Stunde</th>
+                            <th>Lehrer</th>
+                            <th>Fach</th>
+                            <th>Raum</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <For
+                            each={
+                              plan()?.day2.data.find(
+                                (value) => value.class === selected()
+                              )?.data
+                            }
+                          >
+                            {(data) => (
+                              <tr class="text-center grid-row">
+                                <td class="">{data.info}</td>
+                                <td class="">{data.lesson}</td>
+                                <td class="">{data.substitute}</td>
+                                <td class="">{data.subject}</td>
+                                <td class="">{data.room}</td>
+                              </tr>
+                            )}
+                          </For>
+                        </tbody>
+                      </table>
+                    </Show>
+                  </div>
                 </div>
               </main>
             </>

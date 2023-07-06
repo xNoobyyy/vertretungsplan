@@ -1,7 +1,6 @@
 import { load } from "cheerio"
 import { json } from "solid-start"
 import { ClassData, DayData, PlanItem } from "~/lib/types"
-
 const extractClassDataFromTable = (htmlString: string): DayData => {
   const $ = load(htmlString)
   const tableRows = $(".mon_list tr")
@@ -68,6 +67,7 @@ const concatInfo = (text1: string, text2: string) => {
   return (text1 + " | " + text2)
 }
 
+// add some scraping thingy that saves the data on every state known (use a cron job in vercel to ping api?)
 export const GET = async () => {
   try {
     var day1res = await fetch(
