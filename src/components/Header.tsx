@@ -1,20 +1,31 @@
 import { A } from "@solidjs/router"
-import { Component } from "solid-js"
+import { Accessor, Component, Setter } from "solid-js"
 
-const Header: Component = () => {
+type Props = {
+  toggleDarkMode: () => void,
+}
+
+const Header: Component<Props> = (props) => {
   return (
-    <header class="text-2xl font-bold m-8 content-center items-center justify-center flex">
-      <h1>Vertretungsplan</h1>
+    <header class="text-2xl font-bold my-8 flex items-center justify-center">
+      <h1 class="cursor-pointer select-none" onClick={props.toggleDarkMode}>Vertretungsplan</h1>
       <A href="https://wp.paulsen-gymnasium.de/">
         <img
-          class="object-cover h-16 w-auto ml-6"
+          class="object-cover h-16 pt:h-12 w-auto ml-4 block dark:hidden"
           src="/paulsen-logo-dark.svg"
+          alt="Paulsen-Logo"
+        />
+      </A>
+      <A href="https://wp.paulsen-gymnasium.de/">
+        <img
+          class="object-cover h-16 pt:h-12 w-auto ml-4 hidden dark:block"
+          src="/paulsen-logo-light.svg"
           alt="Paulsen-Logo"
         />
       </A>
       <A href="https://github.com/xNoobyyy/vertretungsplan">
         <svg
-          class="dt:ml-6 dt:h-10 aspect-square fill-secondary pt:absolute pt:top-2 pt:left-2 pt:h-8"
+          class="dt:ml-6 dt:h-10 aspect-square fill-secondary dark:fill-secondary-dark pt:absolute pt:top-2 pt:left-2 pt:h-8"
           stroke-width="0"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 480 512"

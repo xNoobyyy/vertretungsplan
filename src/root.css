@@ -4,7 +4,7 @@
 
 * {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  @apply text-background;
+  @apply text-text dark:text-primary;
 }
 
 *:focus,
@@ -23,10 +23,6 @@
 
 ::-webkit-scrollbar-thumb {
   @apply border-4 border-solid border-transparent bg-neutral-500 rounded-full bg-clip-padding;
-}
-
-body {
-  overflow-x: hidden;
 }
 
 @layer components {
@@ -50,11 +46,11 @@ body {
     }
 
     & * {
-      @apply border-0 border-y-neutral-300 py-3;
+      @apply py-3;
     }
 
     &:not(:nth-last-child(-n + 1)) {
-      @apply border-b-[0.5px];
+      @apply border-b-[0.5px] border-y-neutral-300 dark:border-y-neutral-800;
     }
   }
 
