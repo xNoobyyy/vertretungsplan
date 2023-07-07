@@ -3,7 +3,7 @@ import { Component } from "solid-js"
 
 const Header: Component = () => {
   return (
-    <header class="text-2xl font-bold m-8 text-[#424242] content-center items-center justify-center flex">
+    <header class="text-2xl font-bold m-8 content-center items-center justify-center flex">
       <h1>Vertretungsplan</h1>
       <A href="https://wp.paulsen-gymnasium.de/">
         <img
@@ -14,7 +14,7 @@ const Header: Component = () => {
       </A>
       <A href="https://github.com/xNoobyyy/vertretungsplan">
         <svg
-          class="dt:ml-6 dt:h-10 aspect-square fill-[#eff4f6] pt:absolute pt:top-2 pt:left-2 pt:h-8"
+          class="dt:ml-6 dt:h-10 aspect-square fill-secondary pt:absolute pt:top-2 pt:left-2 pt:h-8"
           stroke-width="0"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 480 512"

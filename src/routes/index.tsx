@@ -12,10 +12,7 @@ import Header from "~/components/Header"
 export const routeData = () => {
   const plan = createRouteData(fetchApi)
   const selected = createServerData$(
-    async (source, event) =>
-      ((await storage.getSession(event.request.headers.get("cookie"))).get(
-        "selected"
-      ) as string) ?? "7A"
+    async (source, event) => ((await storage.getSession(event.request.headers.get("cookie"))).get("selected") as string | undefined)
   )
 
   return { plan, selected }
@@ -71,13 +68,10 @@ export const Home = () => {
     "10B",
     "10E",
     "10N",
-    "11",
-    "12",
+    "Oberstufe"
   ]
 
-  const [selected, setSelected] = createSignal(
-    data.selected.state === "ready" ? data.selected()!! : "7A"
-  )
+  const [selected, setSelected] = createSignal(data.selected())
 
   const select = (selected: string) => {
     setSelected(selected)
@@ -101,22 +95,24 @@ export const Home = () => {
           fallback={
             <>
               <Header />
-              <nav class="bg-[#eff4f6] shadow-dark">
-                <div class="min-h-max flex w-full flex-wrap justify-center items-center px-10 pt-6 pb-2">
-                  <For each={classes}>
-                    {(item) => (
-                      <button
-                        class={`w-14 h-9 shadow-lg shadow-[#bac5c5] m-1 ${
-                          selected() === item
-                            ? "bg-[#b2c6ce] shadow-[#516363]"
-                            : ""
-                        }`}
-                        onclick={() => select(item)}
-                      >
-                        {item}
-                      </button>
-                    )}
-                  </For>
+              <nav class="bg-secondary shadow-dark">
+                <div class="flex h-full w-full items-center justify-center dt:gap-10 pt:flex-col pt:gap-0">
+                  <div class="min-h-max flex w-full flex-wrap justify-center items-center pt-6 pb-2">
+                    <For each={classes}>
+                      {(item) => (
+                        <button
+                          class={`w-12 min-w-fit h-9 shadow-lg shadow-[#bac5c5] m-1 px-2 ${
+                            selected() === item
+                              ? "bg-primary shadow-[#516363]"
+                              : ""
+                          }`}
+                          onclick={() => select(item)}
+                        >
+                          {item}
+                        </button>
+                      )}
+                    </For>
+                  </div>
                 </div>
                 <div class="h-12 flex select-none text-md overflow-x-hidden">
                   <div
@@ -127,9 +123,11 @@ export const Home = () => {
                 </div>
               </nav>
               <main class="my-12 flex pt:flex-col dt:justify-center dt:gap-[10vw] pt:gap-10">
-                <div class="flex justify-center">
-                  <div class="dt:w-[40vw] pt:w-[95vw] text-[#424242]">
-                    <div class="text-center text-2xl font-mono text-[#424242] mb-10">
+                <Show when={typeof selected() !== "undefined"} fallback={<div class="flex w-screen h-[50vh] justify-center items-center font-mono text-3xl">Wähle eine Klasse!  </div>}>
+                  <div class="flex justify-center">
+                  
+                  <div class="dt:w-[40vw] pt:w-[95vw]">
+                    <div class="text-center text-2xl font-mono mb-10">
                       {plan()?.day1.date}
                       <div class="text-xl">{plan()?.day1.state}</div>
                     </div>
@@ -140,7 +138,7 @@ export const Home = () => {
                         )?.data
                       }
                       fallback={
-                        <div class="text-2xl text-center font-mono">
+                        <div class="text-xl text-center">
                           Keine Vertretungsplan Einträge!
                         </div>
                       }
@@ -178,10 +176,10 @@ export const Home = () => {
                     </Show>
                   </div>
                 </div>
-                <div class="h-[0.5px] w-screen bg-neutral-200 my-10 dt:hidden" />
+                <div class="h-[0.5px] w-screen bg-background my-10 dt:hidden" />
                 <div class="flex justify-center">
-                  <div class="dt:w-[40vw] pt:w-[95vw] text-[#424242]">
-                    <div class="text-center text-2xl font-mono text-[#424242] mb-10">
+                  <div class="dt:w-[40vw] pt:w-[95vw]">
+                    <div class="text-center text-2xl font-mono mb-10">
                       {plan()?.day2.date}
                       <div class="text-xl">{plan()?.day2.state}</div>
                     </div>
@@ -230,6 +228,7 @@ export const Home = () => {
                     </Show>
                   </div>
                 </div>
+                </Show>
               </main>
             </>
           }
