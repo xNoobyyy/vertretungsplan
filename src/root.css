@@ -27,7 +27,7 @@
 
 @layer components {
   .marquee {
-    animation: marquee 30s linear infinite;
+    animation: marquee 20s linear infinite;
 
     &:hover {
       -moz-animation-play-state: paused;

@@ -78,6 +78,7 @@ export const Home = () => {
 
   const [selected, setSelected] = createSignal(data.serverData()?.selected)
   const [darkMode, setDarkMode] = createSignal(data.serverData()?.darkMode ?? false)
+
   onMount(() => {
     document.documentElement.classList.add(darkMode() ? "dark" : "light")
     document.documentElement.classList.remove(darkMode() ? "light" : "dark")
@@ -140,10 +141,8 @@ export const Home = () => {
                   </div>
                 </div>
                 <div class="h-12 flex select-none text-md overflow-x-hidden">
-                  <div
-                    class={`flex-shrink-0 flex items-center justify-around min-w-full marquee pl-[100%]`}
-                  >
-                    {plan()?.slider}
+                  <div class={`flex-shrink-0 flex items-center justify-around min-w-full marquee pl-[100%]`}>
+                    { plan()?.slider }
                   </div>
                 </div>
               </nav>
