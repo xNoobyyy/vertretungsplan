@@ -147,7 +147,7 @@ export const Home = () => {
                 </div>
               </nav>
               <main class="my-12 flex pt:flex-col dt:justify-center dt:gap-[10vw] pt:gap-10">
-                <Show when={typeof selected() !== "undefined"} fallback={<div class="flex w-screen h-[50vh] justify-center items-center font-mono text-3xl">Wähle eine Klasse!  </div>}>
+                <Show when={typeof selected() !== "undefined"} fallback={<div class="flex w-screen h-[50vh] justify-center items-center font-mono text-3xl">Wähle eine Klasse!</div>}>
                   <div class="flex justify-center">
                   
                   <div class="dt:w-[40vw] pt:w-[95vw]">
