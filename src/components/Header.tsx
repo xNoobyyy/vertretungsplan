@@ -11,14 +11,14 @@ const Header: Component<Props> = (props) => {
       <h1 class="cursor-pointer select-none" onClick={props.toggleDarkMode}>Vertretungsplan</h1>
       <A href="https://wp.paulsen-gymnasium.de/">
         <img
-          class="object-cover h-16 pt:h-12 w-auto ml-4 block dark:hidden"
+          class="object-cover h-16 pt:h-11 w-auto ml-4 block dark:hidden"
           src="/paulsen-logo-dark.svg"
           alt="Paulsen-Logo"
         />
       </A>
       <A href="https://wp.paulsen-gymnasium.de/">
         <img
-          class="object-cover h-16 pt:h-12 w-auto ml-4 hidden dark:block"
+          class="object-cover h-16 pt:h-11 w-auto ml-4 hidden dark:block"
           src="/paulsen-logo-light.svg"
           alt="Paulsen-Logo"
         />

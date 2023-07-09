@@ -129,7 +129,7 @@ export const Home = () => {
                         <button
                           class={`w-12 min-w-fit h-9 shadow-lg shadow-[#bac5c5] dark:shadow-neutral-900 m-1 px-2 ${
                             selected() === item
-                              ? "bg-primary dark:bg-primary-dark shadow-[#516363] dark:shadow-neutral-950"
+                              ? "bg-primary dark:bg-primary-dark shadow-[#546d6d] dark:shadow-neutral-950"
                               : ""
                           }`}
                           onclick={() => select(item)}
@@ -149,7 +149,6 @@ export const Home = () => {
               <main class="my-12 flex pt:flex-col dt:justify-center dt:gap-[10vw] pt:gap-10">
                 <Show when={typeof selected() !== "undefined"} fallback={<div class="flex w-screen h-[50vh] justify-center items-center font-mono text-3xl">Wähle eine Klasse!</div>}>
                   <div class="flex justify-center">
-                  
                   <div class="dt:w-[40vw] pt:w-[95vw]">
                     <div class="text-center text-2xl font-mono mb-10">
                       {plan()?.day1.date}
