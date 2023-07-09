@@ -121,7 +121,7 @@ export const Home = () => {
           fallback={
             <>
               <Header toggleDarkMode={toggleDarkMode} />
-              <nav class="bg-secondary dark:bg-secondary-dark shadow-dark">
+              <nav class="bg-secondary dark:bg-secondary-dark shadow-dark px-4">
                 <div class="flex h-full w-full items-center justify-center dt:gap-10 pt:flex-col pt:gap-0">
                   <div class="min-h-max flex w-full flex-wrap justify-center items-center pt-6 pb-2">
                     <For each={classes}>
