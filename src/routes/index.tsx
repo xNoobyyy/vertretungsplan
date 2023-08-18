@@ -2,23 +2,19 @@
 import { For, Show, createSignal, onMount } from "solid-js"
 import { createRouteData, useRouteData } from "solid-start"
 import { DayData } from "~/lib/types"
-import {
-  createServerData$,
-} from "solid-start/server"
+import { createServerData$ } from "solid-start/server"
 import { storage } from "~/lib/utils"
 import Header from "~/components/Header"
 
 export const routeData = () => {
   const plan = createRouteData(fetchApi)
-  const serverData = createServerData$(
-    async (source, event) => {
-      const stor = await storage.getSession(event.request.headers.get("cookie"))
-      return {
-        selected: stor.get("selected") as string | undefined,
-        darkMode: stor.get("darkMode") as boolean | undefined,
-      }
+  const serverData = createServerData$(async (source, event) => {
+    const stor = await storage.getSession(event.request.headers.get("cookie"))
+    return {
+      selected: stor.get("selected") as string | undefined,
+      darkMode: stor.get("darkMode") as boolean | undefined,
     }
-  )
+  })
 
   return { plan, serverData }
 }
@@ -73,17 +69,20 @@ export const Home = () => {
     "10B",
     "10E",
     "10N",
-    "Oberstufe"
+    "11",
+    "12",
   ]
 
   const [selected, setSelected] = createSignal(data.serverData()?.selected)
-  const [darkMode, setDarkMode] = createSignal(data.serverData()?.darkMode ?? false)
+  const [darkMode, setDarkMode] = createSignal(
+    data.serverData()?.darkMode ?? false
+  )
 
   onMount(() => {
     document.documentElement.classList.add(darkMode() ? "dark" : "light")
     document.documentElement.classList.remove(darkMode() ? "light" : "dark")
   })
-  
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode())
     document.documentElement.classList.add(darkMode() ? "dark" : "light")
@@ -141,116 +140,125 @@ export const Home = () => {
                   </div>
                 </div>
                 <div class="h-12 flex select-none text-md overflow-x-hidden">
-                  <div class={`flex-shrink-0 flex items-center justify-around min-w-full marquee pl-[100%]`}>
-                    { plan()?.slider }
+                  <div
+                    class={`flex-shrink-0 flex items-center justify-around min-w-full marquee pl-[100%]`}
+                  >
+                    {plan()?.slider}
                   </div>
                 </div>
               </nav>
               <main class="my-12 flex pt:flex-col dt:justify-center dt:gap-[10vw] pt:gap-10">
-                <Show when={typeof selected() !== "undefined"} fallback={<div class="flex w-screen h-[50vh] justify-center items-center font-mono text-3xl">Wähle eine Klasse!</div>}>
+                <Show
+                  when={typeof selected() !== "undefined"}
+                  fallback={
+                    <div class="flex w-screen h-[50vh] justify-center items-center font-mono text-3xl">
+                      Wähle eine Klasse!
+                    </div>
+                  }
+                >
                   <div class="flex justify-center">
-                  <div class="dt:w-[40vw] pt:w-[95vw]">
-                    <div class="text-center text-2xl font-mono mb-10">
-                      {plan()?.day1.date}
-                      <div class="text-xl">{plan()?.day1.state}</div>
+                    <div class="dt:w-[40vw] pt:w-[95vw]">
+                      <div class="text-center text-2xl font-mono mb-10">
+                        {plan()?.day1.date}
+                        <div class="text-xl">{plan()?.day1.state}</div>
+                      </div>
+                      <Show
+                        when={
+                          plan()?.day1.data.find(
+                            (value) => value.class === selected()
+                          )?.data
+                        }
+                        fallback={
+                          <div class="text-xl text-center">
+                            Keine Vertretungsplan Einträge!
+                          </div>
+                        }
+                      >
+                        <table class="w-full">
+                          <thead>
+                            <tr class="grid-header-row">
+                              <th>Info</th>
+                              <th>Stunde</th>
+                              <th>Lehrer</th>
+                              <th>Fach</th>
+                              <th>Raum</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <For
+                              each={
+                                plan()?.day1.data.find(
+                                  (value) => value.class === selected()
+                                )?.data
+                              }
+                            >
+                              {(data) => (
+                                <tr class="text-center grid-row">
+                                  <td class="">{data.info}</td>
+                                  <td class="">{data.lesson}</td>
+                                  <td class="">{data.substitute}</td>
+                                  <td class="">{data.subject}</td>
+                                  <td class="">{data.room}</td>
+                                </tr>
+                              )}
+                            </For>
+                          </tbody>
+                        </table>
+                      </Show>
                     </div>
-                    <Show
-                      when={
-                        plan()?.day1.data.find(
-                          (value) => value.class === selected()
-                        )?.data
-                      }
-                      fallback={
-                        <div class="text-xl text-center">
-                          Keine Vertretungsplan Einträge!
-                        </div>
-                      }
-                    >
-                      <table class="w-full">
-                        <thead>
-                          <tr class="grid-header-row">
-                            <th>Info</th>
-                            <th>Stunde</th>
-                            <th>Lehrer</th>
-                            <th>Fach</th>
-                            <th>Raum</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <For
-                            each={
-                              plan()?.day1.data.find(
-                                (value) => value.class === selected()
-                              )?.data
-                            }
-                          >
-                            {(data) => (
-                              <tr class="text-center grid-row">
-                                <td class="">{data.info}</td>
-                                <td class="">{data.lesson}</td>
-                                <td class="">{data.substitute}</td>
-                                <td class="">{data.subject}</td>
-                                <td class="">{data.room}</td>
-                              </tr>
-                            )}
-                          </For>
-                        </tbody>
-                      </table>
-                    </Show>
                   </div>
-                </div>
-                <div class="h-[0.5px] w-screen bg-text my-10 dt:hidden" />
-                <div class="flex justify-center">
-                  <div class="dt:w-[40vw] pt:w-[95vw]">
-                    <div class="text-center text-2xl font-mono mb-10">
-                      {plan()?.day2.date}
-                      <div class="text-xl">{plan()?.day2.state}</div>
+                  <div class="h-[0.5px] w-screen bg-text my-10 dt:hidden" />
+                  <div class="flex justify-center">
+                    <div class="dt:w-[40vw] pt:w-[95vw]">
+                      <div class="text-center text-2xl font-mono mb-10">
+                        {plan()?.day2.date}
+                        <div class="text-xl">{plan()?.day2.state}</div>
+                      </div>
+                      <Show
+                        when={
+                          plan()?.day2.data.find(
+                            (value) => value.class === selected()
+                          )?.data
+                        }
+                        fallback={
+                          <div class="text-2xl text-center font-mono">
+                            Keine Vertretungsplan Einträge!
+                          </div>
+                        }
+                      >
+                        <table class="w-full">
+                          <thead>
+                            <tr class="grid-header-row">
+                              <th>Info</th>
+                              <th>Stunde</th>
+                              <th>Lehrer</th>
+                              <th>Fach</th>
+                              <th>Raum</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <For
+                              each={
+                                plan()?.day2.data.find(
+                                  (value) => value.class === selected()
+                                )?.data
+                              }
+                            >
+                              {(data) => (
+                                <tr class="text-center grid-row">
+                                  <td>{data.info}</td>
+                                  <td>{data.lesson}</td>
+                                  <td>{data.substitute}</td>
+                                  <td>{data.subject}</td>
+                                  <td>{data.room}</td>
+                                </tr>
+                              )}
+                            </For>
+                          </tbody>
+                        </table>
+                      </Show>
                     </div>
-                    <Show
-                      when={
-                        plan()?.day2.data.find(
-                          (value) => value.class === selected()
-                        )?.data
-                      }
-                      fallback={
-                        <div class="text-2xl text-center font-mono">
-                          Keine Vertretungsplan Einträge!
-                        </div>
-                      }
-                    >
-                      <table class="w-full">
-                        <thead>
-                          <tr class="grid-header-row">
-                            <th>Info</th>
-                            <th>Stunde</th>
-                            <th>Lehrer</th>
-                            <th>Fach</th>
-                            <th>Raum</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <For
-                            each={
-                              plan()?.day2.data.find(
-                                (value) => value.class === selected()
-                              )?.data
-                            }
-                          >
-                            {(data) => (
-                              <tr class="text-center grid-row">
-                                <td>{data.info}</td>
-                                <td>{data.lesson}</td>
-                                <td>{data.substitute}</td>
-                                <td>{data.subject}</td>
-                                <td>{data.room}</td>
-                              </tr>
-                            )}
-                          </For>
-                        </tbody>
-                      </table>
-                    </Show>
                   </div>
-                </div>
                 </Show>
               </main>
             </>

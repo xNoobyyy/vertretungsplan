@@ -47,55 +47,9 @@ const extractClassDataFromTable = (htmlString: string): DayData => {
 }
 
 const mergeData = (classDataArray: ClassData[]): ClassData[] => {
-  const class11Index = classDataArray.findIndex((item) => item.class === "11")
-  const class12Index = classDataArray.findIndex((item) => item.class === "12")
-
-  if (class11Index !== -1 || class12Index !== -1) {
-    const newData: PlanItem[] = []
-
-    // Extract data from "11" element
-    if (class11Index !== -1) {
-      const class11Element = classDataArray[class11Index]
-      newData.push(...class11Element.data)
-      classDataArray.splice(class11Index, 1) // Remove the "11" element
-    }
-
-    // Extract data from "12" element
-    if (class12Index !== -1) {
-      const class12Element = classDataArray[class12Index]
-      newData.push(...class12Element.data)
-      classDataArray.splice(class12Index, 1) // Remove the "12" element
-    }
-
-    // Create "Oberstufe" element and merge the extracted data
-    const oberstufeElement: ClassData = {
-      class: "Oberstufe",
-      data: newData,
-    }
-    classDataArray.push(oberstufeElement)
-  }
-
-  const oberstufeIndex = classDataArray.findIndex(
-    (item) => item.class === "Oberstufe"
-  )
-
-  const oberstufeElement = classDataArray[oberstufeIndex]
-
-  for (const classData of classDataArray) {
-    if (/^[GL]\d{2}.*$/.test(classData.class) && classData !== oberstufeElement) {
-      for (const planItem of classData.data) {
-        planItem.subject = classData.class
-        oberstufeElement.data.push(planItem)
-      }
-    }
-  }
-
-  // Remove elements with "G"/"L" followed by two numbers
-  classDataArray = classDataArray.filter(
+  return classDataArray.filter(
     (classData) => !/^[GL]\d{2}.*$/.test(classData.class)
   )
-
-  return classDataArray
 }
 
 const extractSliderData = (htmlString: string) => {
