@@ -1,5 +1,5 @@
 import { A } from "@solidjs/router"
-import { Accessor, Component, Setter } from "solid-js"
+import { Component } from "solid-js"
 
 type Props = {
   toggleDarkMode: () => void,
@@ -25,7 +25,7 @@ const Header: Component<Props> = (props) => {
       </A>
       <A href="https://github.com/xNoobyyy/vertretungsplan">
         <svg
-          class="dt:ml-6 dt:h-10 aspect-square fill-secondary dark:fill-secondary-dark pt:absolute pt:top-2 pt:left-2 pt:h-8"
+          class="dt:ml-6 dt:h-10 aspect-square fill-secondary dark:fill-secondary-dark pt:absolute pt:top-2 pt:left-2 pt:h-8 opacity-50"
           stroke-width="0"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 480 512"
