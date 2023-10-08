@@ -29,7 +29,11 @@ const extractClassDataFromTable = (htmlString: string): DayData => {
             ? tableCells.eq(4).text().trim()
             : tableCells.eq(3).text().trim()
         ),
-        room: checkNotAvailable(isAvailable(tableCells.eq(6).text().trim()) ? tableCells.eq(6).text().trim() : tableCells.eq(5).text().trim()),
+        room: checkNotAvailable(
+          isAvailable(tableCells.eq(6).text().trim())
+            ? tableCells.eq(6).text().trim()
+            : tableCells.eq(5).text().trim()
+        ),
         info: concatInfo(
           tableCells.eq(0).text().trim(),
           tableCells.eq(7).text().trim()
@@ -65,7 +69,13 @@ const checkNotAvailable = (text: string) => {
 }
 
 const isAvailable = (text: string) => {
-  return !(text === "+" || text === "" || text === "&nbsp;" || text === "---" || text === "-")
+  return !(
+    text === "+" ||
+    text === "" ||
+    text === "&nbsp;" ||
+    text === "---" ||
+    text === "-"
+  )
 }
 
 const concatInfo = (text1: string, text2: string) => {
@@ -78,8 +88,6 @@ const concatInfo = (text1: string, text2: string) => {
 
   if (!isAvailable(text1)) return text2
   if (!isAvailable(text2)) return text1
-
-
 
   return text1 + " | " + text2
 }
