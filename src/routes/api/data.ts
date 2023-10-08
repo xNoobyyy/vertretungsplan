@@ -65,17 +65,21 @@ const checkNotAvailable = (text: string) => {
 }
 
 const isAvailable = (text: string) => {
-  return !(text === "+" || text === "" || text === "&nbsp;")
+  return !(text === "+" || text === "" || text === "&nbsp;" || text === "---" || text === "-")
 }
 
 const concatInfo = (text1: string, text2: string) => {
+  if (!isAvailable(text1) && !isAvailable(text2)) return "---"
+
   if (text1 === text2) {
     return text1
   }
+  if (text2.includes(text1)) return text2
 
-  if (!isAvailable(text1) && !isAvailable(text2)) return "---"
   if (!isAvailable(text1)) return text2
   if (!isAvailable(text2)) return text1
+
+
 
   return text1 + " | " + text2
 }
