@@ -29,7 +29,7 @@ const extractClassDataFromTable = (htmlString: string): DayData => {
             ? tableCells.eq(4).text().trim()
             : tableCells.eq(3).text().trim()
         ),
-        room: checkNotAvailable(tableCells.eq(6).text().trim()),
+        room: checkNotAvailable(isAvailable(tableCells.eq(6).text().trim()) ? tableCells.eq(6).text().trim() : tableCells.eq(5).text().trim()),
         info: concatInfo(
           tableCells.eq(0).text().trim(),
           tableCells.eq(7).text().trim()
