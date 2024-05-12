@@ -1,0 +1,14 @@
+// vite.config.ts
+import solid from "file:///D:/Coding/vertretungsplan/node_modules/solid-start/vite/plugin.js";
+import { defineConfig } from "file:///D:/Coding/vertretungsplan/node_modules/vite/dist/node/index.js";
+import vercel from "file:///D:/Coding/vertretungsplan/node_modules/solid-start-vercel/index.js";
+var vite_config_default = defineConfig({
+  plugins: [solid({
+    ssr: true,
+    adapter: vercel({ edge: true })
+  })]
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcudHMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCJEOlxcXFxDb2RpbmdcXFxcdmVydHJldHVuZ3NwbGFuXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ZpbGVuYW1lID0gXCJEOlxcXFxDb2RpbmdcXFxcdmVydHJldHVuZ3NwbGFuXFxcXHZpdGUuY29uZmlnLnRzXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ltcG9ydF9tZXRhX3VybCA9IFwiZmlsZTovLy9EOi9Db2RpbmcvdmVydHJldHVuZ3NwbGFuL3ZpdGUuY29uZmlnLnRzXCI7aW1wb3J0IHNvbGlkIGZyb20gXCJzb2xpZC1zdGFydC92aXRlXCI7XG5pbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tIFwidml0ZVwiO1xuaW1wb3J0IHZlcmNlbCBmcm9tIFwic29saWQtc3RhcnQtdmVyY2VsXCJcblxuZXhwb3J0IGRlZmF1bHQgZGVmaW5lQ29uZmlnKHtcbiAgcGx1Z2luczogW3NvbGlkKHtcbiAgICBzc3I6IHRydWUsXG4gICAgYWRhcHRlcjogdmVyY2VsKHsgZWRnZTogdHJ1ZSB9KVxuICB9KV0sXG59KTtcbiJdLAogICJtYXBwaW5ncyI6ICI7QUFBbVEsT0FBTyxXQUFXO0FBQ3JSLFNBQVMsb0JBQW9CO0FBQzdCLE9BQU8sWUFBWTtBQUVuQixJQUFPLHNCQUFRLGFBQWE7QUFBQSxFQUMxQixTQUFTLENBQUMsTUFBTTtBQUFBLElBQ2QsS0FBSztBQUFBLElBQ0wsU0FBUyxPQUFPLEVBQUUsTUFBTSxLQUFLLENBQUM7QUFBQSxFQUNoQyxDQUFDLENBQUM7QUFDSixDQUFDOyIsCiAgIm5hbWVzIjogW10KfQo=

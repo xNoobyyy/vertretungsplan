@@ -1,6 +1,13 @@
 import { load } from "cheerio"
 import { json } from "solid-start"
 import { ClassData, DayData, PlanItem } from "~/lib/types"
+import https from "https"
+import axios from "axios"
+
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false,
+})
+
 const extractClassDataFromTable = (htmlString: string): DayData => {
   const $ = load(htmlString)
   const tableRows = $(".mon_list tr")
@@ -95,62 +102,53 @@ const concatInfo = (text1: string, text2: string) => {
 // add some scraping thingy that saves the data on every state known (use a cron job in vercel to ping api?)
 export const GET = async () => {
   try {
-    var day1res = await fetch(
-      "https://www.pgb-info.de/joomla/images/sampledata/untis/Web/f1/subst_001.htm",
-      {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-      }
-    )
+    var day1res = await axios({
+      method: "GET",
+      url: "https://www.pgb-info.de/joomla/images/sampledata/untis/Web/f1/subst_001.htm",
+      httpsAgent: httpsAgent,
+    })
   } catch (err) {
     console.log(err)
     return json({ error: "day1res not ok" })
   }
 
   try {
-    var day2res = await fetch(
-      "https://www.pgb-info.de/joomla/images/sampledata/untis/Web/f2/subst_001.htm",
-      {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-      }
-    )
+    var day2res = await axios({
+      method: "GET",
+      url: "https://www.pgb-info.de/joomla/images/sampledata/untis/Web/f2/subst_001.htm",
+      httpsAgent: httpsAgent,
+    })
   } catch (err) {
     console.log(err)
     return json({ error: "day2res not ok" })
   }
 
   try {
-    var sliderres = await fetch(
-      "https://www.pgb-info.de/joomla/images/sampledata/untis/Web/ticker.htm",
-      {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-      }
-    )
+    var sliderres = await axios({
+      method: "GET",
+      url: "https://www.pgb-info.de/joomla/images/sampledata/untis/Web/ticker.htm",
+      httpsAgent: httpsAgent,
+    })
   } catch (err) {
     console.log(err)
     return json({ error: "sliderres not ok" })
   }
 
-  if (!day1res.ok) {
+  if (day1res.status !== 200) {
     return json({ error: "day1res not ok" })
   }
 
-  if (!day2res.ok) {
+  if (day2res.status !== 200) {
     return json({ error: "day2res not ok" })
   }
 
-  if (!sliderres.ok) {
+  if (sliderres.status !== 200) {
     return json({ error: "sliderres not ok" })
   }
 
   return json({
-    day1: extractClassDataFromTable(await day1res.text()),
-    day2: extractClassDataFromTable(await day2res.text()),
-    slider: extractSliderData(await sliderres.text()),
+    day1: extractClassDataFromTable(await day1res.data as string),
+    day2: extractClassDataFromTable(await day2res.data as string),
+    slider: extractSliderData(await sliderres.data as string),
   })
 }

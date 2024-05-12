@@ -13,18 +13,6 @@
   outline: none;
 }
 
-::-webkit-scrollbar {
-  @apply w-4 bg-transparent;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply border-4 border-solid border-transparent bg-neutral-500 rounded-full bg-clip-padding;
-}
-
 @layer components {
   .marquee {
     animation: marquee 20s linear infinite;
