@@ -67,12 +67,12 @@ const Home = () => {
     setDarkMode(!darkMode())
     document.documentElement.classList.add(darkMode() ? "dark" : "light")
     document.documentElement.classList.remove(darkMode() ? "light" : "dark")
-    sendDarkMode(darkMode())
+    //sendDarkMode(darkMode())
   }
 
   const select = (selected: string) => {
     setSelected(selected)
-    sendSelected(selected)
+    //sendSelected(selected)
   }
 
   return (
