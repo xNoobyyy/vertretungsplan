@@ -9,38 +9,15 @@ import { DayData } from "~/lib/types"
 
 const loadData = cache(async () => {
   "use server"
-  //const plan = await planData()
+  const plan = await planData()
 
-  //console.log("waaa", typeof plan, plan)
+  console.log("waaa", typeof plan, plan)
 
-  //const serverData = await sessionServerData()
+  const serverData = await sessionServerData()
 
-  //console.log("weee", typeof serverData, serverData)
+  console.log("weee", typeof serverData, serverData)
 
-  return {
-    plan: {
-      day1: undefined,
-      day2: undefined,
-      slider: undefined,
-      error: "no data" as string,
-    } as
-      | {
-          error: string
-          day1?: undefined
-          day2?: undefined
-          slider?: undefined
-        }
-      | {
-          day1: DayData
-          day2: DayData
-          slider: string
-          error?: undefined
-        },
-    serverData: {
-      selected: undefined as string | undefined,
-      darkMode: undefined as boolean | undefined,
-    },
-  }
+  return { plan, serverData }
 }, "plan_data")
 
 export const route = {
