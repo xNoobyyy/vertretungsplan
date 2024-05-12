@@ -1,36 +1,57 @@
 // @refresh reload
-import { For, Show, createEffect, createSignal, onMount } from "solid-js"
+import { For, Show, createSignal, onMount } from "solid-js"
 import Header from "~/components/Header"
 import { cache, createAsync, useAction } from "@solidjs/router"
 import { actionDarkMode, actionSelected } from "~/lib/action"
 import { serverData as sessionServerData } from "~/lib/session"
 import { planData } from "~/lib/plan"
+import { DayData } from "~/lib/types"
 
 const loadData = cache(async () => {
   "use server"
-  const plan = await planData()
+  //const plan = await planData()
 
-  console.log("waaa", typeof plan, plan)
+  //console.log("waaa", typeof plan, plan)
 
-  const serverData = await sessionServerData()
+  //const serverData = await sessionServerData()
 
-  console.log("weee", typeof serverData, serverData)
+  //console.log("weee", typeof serverData, serverData)
 
   return {
-    plan,
-    serverData,
+    plan: {
+      day1: undefined,
+      day2: undefined,
+      slider: undefined,
+      error: "no data" as string,
+    } as
+      | {
+          error: string
+          day1?: undefined
+          day2?: undefined
+          slider?: undefined
+        }
+      | {
+          day1: DayData
+          day2: DayData
+          slider: string
+          error?: undefined
+        },
+    serverData: {
+      selected: undefined as string | undefined,
+      darkMode: undefined as boolean | undefined,
+    },
   }
 }, "plan_data")
 
-// export const route = {
-//   load: () => loadData(),
-// }
+export const route = {
+  load: () => loadData(),
+}
 
 const Home = () => {
   const data = createAsync(() => loadData())
 
-  //const sendDarkMode = useAction(actionDarkMode)
-  //const sendSelected = useAction(actionSelected)
+  const sendDarkMode = useAction(actionDarkMode)
+  const sendSelected = useAction(actionSelected)
 
   const classes = [
     "7A",
@@ -67,12 +88,12 @@ const Home = () => {
     setDarkMode(!darkMode())
     document.documentElement.classList.add(darkMode() ? "dark" : "light")
     document.documentElement.classList.remove(darkMode() ? "light" : "dark")
-    //sendDarkMode(darkMode())
+    sendDarkMode(darkMode())
   }
 
   const select = (selected: string) => {
     setSelected(selected)
-    //sendSelected(selected)
+    sendSelected(selected)
   }
 
   return (
