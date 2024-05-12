@@ -2,7 +2,7 @@
 import { For, Show, createSignal, onMount } from "solid-js"
 import Header from "~/components/Header"
 import { cache, createAsync, useAction } from "@solidjs/router"
-import { actionDarkMode, actionSelected } from "~/lib/action"
+//import { actionDarkMode, actionSelected } from "~/lib/action"
 import { serverData as sessionServerData } from "~/lib/session"
 import { planData } from "~/lib/plan"
 import { DayData } from "~/lib/types"
@@ -27,8 +27,8 @@ export const route = {
 const Home = () => {
   const data = createAsync(() => loadData())
 
-  const sendDarkMode = useAction(actionDarkMode)
-  const sendSelected = useAction(actionSelected)
+  //const sendDarkMode = useAction(actionDarkMode)
+  //const sendSelected = useAction(actionSelected)
 
   const classes = [
     "7A",
@@ -65,12 +65,12 @@ const Home = () => {
     setDarkMode(!darkMode())
     document.documentElement.classList.add(darkMode() ? "dark" : "light")
     document.documentElement.classList.remove(darkMode() ? "light" : "dark")
-    sendDarkMode(darkMode())
+    //sendDarkMode(darkMode())
   }
 
   const select = (selected: string) => {
     setSelected(selected)
-    sendSelected(selected)
+    //sendSelected(selected)
   }
 
   return (
