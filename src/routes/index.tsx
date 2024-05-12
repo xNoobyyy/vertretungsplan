@@ -22,15 +22,15 @@ const loadData = cache(async () => {
   }
 }, "plan_data")
 
-export const route = {
-  load: () => loadData(),
-}
+// export const route = {
+//   load: () => loadData(),
+// }
 
 const Home = () => {
   const data = createAsync(() => loadData())
 
-  const sendDarkMode = useAction(actionDarkMode)
-  const sendSelected = useAction(actionSelected)
+  //const sendDarkMode = useAction(actionDarkMode)
+  //const sendSelected = useAction(actionSelected)
 
   const classes = [
     "7A",
