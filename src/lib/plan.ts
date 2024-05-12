@@ -1,5 +1,4 @@
 import { load } from "cheerio"
-import { json } from "solid-start"
 import { ClassData, DayData, PlanItem } from "~/lib/types"
 import https from "https"
 import axios from "axios"
@@ -99,8 +98,8 @@ const concatInfo = (text1: string, text2: string) => {
   return text1 + " | " + text2
 }
 
-// add some scraping thingy that saves the data on every state known (use a cron job in vercel to ping api?)
-export const GET = async () => {
+export const planData = async () => {
+  "use server"
   try {
     var day1res = await axios({
       method: "GET",
@@ -109,7 +108,7 @@ export const GET = async () => {
     })
   } catch (err) {
     console.log(err)
-    return json({ error: "day1res not ok" })
+    return { error: "day1res not ok" }
   }
 
   try {
@@ -120,7 +119,7 @@ export const GET = async () => {
     })
   } catch (err) {
     console.log(err)
-    return json({ error: "day2res not ok" })
+    return { error: "day2res not ok" }
   }
 
   try {
@@ -131,24 +130,24 @@ export const GET = async () => {
     })
   } catch (err) {
     console.log(err)
-    return json({ error: "sliderres not ok" })
+    return { error: "sliderres not ok" }
   }
 
   if (day1res.status !== 200) {
-    return json({ error: "day1res not ok" })
+    return { error: "day1res not ok" }
   }
 
   if (day2res.status !== 200) {
-    return json({ error: "day2res not ok" })
+    return { error: "day2res not ok" }
   }
 
   if (sliderres.status !== 200) {
-    return json({ error: "sliderres not ok" })
+    return { error: "sliderres not ok" }
   }
 
-  return json({
+  return {
     day1: extractClassDataFromTable(await day1res.data as string),
     day2: extractClassDataFromTable(await day2res.data as string),
     slider: extractSliderData(await sliderres.data as string),
-  })
+  }
 }
