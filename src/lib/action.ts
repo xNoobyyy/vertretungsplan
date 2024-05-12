@@ -6,7 +6,7 @@ export const actionDarkMode = action(async (darkMode: boolean) => {
   const session = await useSession({
     password: process.env.SESSION_SECRET!,
   })
-  await session.update({ darkMode })
+  await session.update(d => (d.darkMode = darkMode))
 })
 
 export const actionSelected = action(async (value: string | undefined) => {
@@ -14,5 +14,5 @@ export const actionSelected = action(async (value: string | undefined) => {
   const session = await useSession({
     password: process.env.SESSION_SECRET!,
   })
-  await session.update({ selected: value })
+  await session.update(d => (d.selected = value))
 })
