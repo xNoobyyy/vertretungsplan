@@ -2,6 +2,7 @@ import { load } from "cheerio"
 import { ClassData, DayData, PlanItem } from "~/lib/types"
 import https from "https"
 import axios from "axios"
+import { json } from "@solidjs/router"
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -99,7 +100,6 @@ const concatInfo = (text1: string, text2: string) => {
 }
 
 export const planData = async () => {
-  "use server"
   try {
     var day1res = await axios({
       method: "GET",
@@ -108,7 +108,9 @@ export const planData = async () => {
     })
   } catch (err) {
     console.log(err)
-    return { error: "day1res not ok" }
+    return {
+      error: "day1res not ok"
+    }
   }
 
   try {

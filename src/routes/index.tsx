@@ -5,7 +5,6 @@ import { cache, createAsync, useAction } from "@solidjs/router"
 import { actionDarkMode, actionSelected } from "~/lib/action"
 import { serverData as sessionServerData } from "~/lib/session"
 import { planData } from "~/lib/plan"
-import { DayData } from "~/lib/types"
 
 const loadData = cache(async () => {
   "use server"
