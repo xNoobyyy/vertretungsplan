@@ -135,21 +135,13 @@ export const planData = async () => {
     return { error: "sliderres not ok" }
   }
 
-  if (day1res.status !== 200) {
-    return { error: "day1res not ok" }
+  const day1 = extractClassDataFromTable(await day1res.data as string)
+  const day2 = extractClassDataFromTable(await day2res.data as string)
+  const slider = extractSliderData(await sliderres.data as string)
+
+  if (day1res.status !== 200 || day2res.status !== 200 || sliderres.status !== 200) {
+    return { error: "status not 200" }
   }
 
-  if (day2res.status !== 200) {
-    return { error: "day2res not ok" }
-  }
-
-  if (sliderres.status !== 200) {
-    return { error: "sliderres not ok" }
-  }
-
-  return {
-    day1: extractClassDataFromTable(await day1res.data as string),
-    day2: extractClassDataFromTable(await day2res.data as string),
-    slider: extractSliderData(await sliderres.data as string),
-  }
+  return { day1, day2, slider }
 }

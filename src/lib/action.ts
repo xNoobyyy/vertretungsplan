@@ -9,10 +9,7 @@ export const actionDarkMode = action(async (darkMode: boolean) => {
   }>({
     password: process.env.SESSION_SECRET!,
   })
-  await session.update({
-    darkMode,
-  })
-  return new Response("OK", { status: 200 })
+  await session.update({ darkMode })
 })
 
 export const actionSelected = action(async (value: string | undefined) => {
@@ -23,8 +20,5 @@ export const actionSelected = action(async (value: string | undefined) => {
   }>({
     password: process.env.SESSION_SECRET!,
   })
-  await session.update({
-    selected: value,
-  })
-  return new Response("OK", { status: 200 })
+  await session.update({ selected: value })
 })
