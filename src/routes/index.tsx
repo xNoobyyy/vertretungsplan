@@ -12,8 +12,6 @@ const loadData = cache(async () => {
 
   const serverData = await sessionServerData()
 
-  console.log("weee", typeof serverData, serverData)
-
   return { plan, serverData }
 }, "plan_data")
 
