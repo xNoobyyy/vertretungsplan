@@ -19,6 +19,7 @@
     "@solidjs/meta": "^0.29.3",
     "@solidjs/router": "^0.13.3",
     "@solidjs/start": "^1.0.0-rc.1",
+    "@vercel/analytics": "^1.5.0",
     "axios": "^1.6.8",
     "cheerio": "^1.0.0-rc.12",
     "htmlparser2": "^9.0.0",
