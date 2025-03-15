@@ -29,21 +29,21 @@ const extractClassDataFromTable = (htmlString: string): DayData => {
       classDataList.push(currentClassData)
     } else if (currentClassData) {
       const planItem: PlanItem = {
-        lesson: checkNotAvailable(tableCells.eq(1).text().trim()),
-        substitute: checkNotAvailable(tableCells.eq(2).text().trim()),
+        lesson: checkNotAvailable(tableCells.eq(3).text().trim()),
+        substitute: checkNotAvailable(tableCells.eq(4).text().trim()),
         subject: checkNotAvailable(
-          isAvailable(tableCells.eq(4).text().trim())
-            ? tableCells.eq(4).text().trim()
-            : tableCells.eq(3).text().trim()
+          isAvailable(tableCells.eq(7).text().trim())
+            ? tableCells.eq(7).text().trim()
+            : tableCells.eq(6).text().trim()
         ),
         room: checkNotAvailable(
-          isAvailable(tableCells.eq(6).text().trim())
-            ? tableCells.eq(6).text().trim()
-            : tableCells.eq(5).text().trim()
+          isAvailable(tableCells.eq(10).text().trim())
+            ? tableCells.eq(10).text().trim()
+            : tableCells.eq(8).text().trim()
         ),
         info: concatInfo(
           tableCells.eq(0).text().trim(),
-          tableCells.eq(7).text().trim()
+          tableCells.eq(11).text().trim()
         ),
       }
       currentClassData.data.push(planItem)
